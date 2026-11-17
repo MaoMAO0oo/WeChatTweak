@@ -27,11 +27,20 @@ struct Config: Decodable {
         let arch: Arch
         let addr: UInt64
         let asm: Data
+        let expected: Data?
 
         private enum CodingKeys: CodingKey {
             case arch
             case addr
             case asm
+            case expected
+        }
+
+        init(arch: Arch, addr: UInt64, asm: Data, expected: Data? = nil) {
+            self.arch = arch
+            self.addr = addr
+            self.asm = asm
+            self.expected = expected
         }
 
         init(from decoder: any Decoder) throws {
@@ -59,21 +68,42 @@ struct Config: Decodable {
                 }
                 return value
             }()
+            if let hex = try container.decodeIfPresent(String.self, forKey: .expected) {
+                guard let value = Data(hex: hex), value.count == asm.count else {
+                    throw DecodingError.dataCorruptedError(
+                        forKey: .expected,
+                        in: container,
+                        debugDescription: "Expected bytes must match the patch length"
+                    )
+                }
+                self.expected = value
+            } else {
+                self.expected = nil
+            }
         }
     }
 
     struct Target: Decodable {
         let identifier: String
+        let binary: String
         let entries: [Entry]
+
+        init(identifier: String, binary: String = "Contents/MacOS/WeChat", entries: [Entry]) {
+            self.identifier = identifier
+            self.binary = binary
+            self.entries = entries
+        }
 
         private enum CodingKeys: CodingKey {
             case identifier
+            case binary
             case entries
         }
 
         init(from decoder: any Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             self.identifier = try container.decode(String.self, forKey: .identifier)
+            self.binary = try container.decodeIfPresent(String.self, forKey: .binary) ?? "Contents/MacOS/WeChat"
             self.entries = try container.decode([Entry].self, forKey: .entries)
         }
     }

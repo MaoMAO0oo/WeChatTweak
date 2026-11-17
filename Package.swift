@@ -13,6 +13,11 @@ let package = Package(
             targets: [
                 "WeChatTweak"
             ]
+        ),
+        .library(
+            name: "WeChatTweakRuntime",
+            type: .dynamic,
+            targets: ["WeChatTweakRuntime"]
         )
     ],
     dependencies: [
@@ -24,6 +29,17 @@ let package = Package(
             dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
             ]
+        ),
+        .testTarget(
+            name: "WeChatTweakTests",
+            dependencies: ["WeChatTweak", "WeChatTweakRuntime"]
+        ),
+        .target(
+            name: "WeChatTweakRuntime",
+            publicHeadersPath: "include",
+            cxxSettings: [.unsafeFlags(["-fobjc-arc"])],
+            linkerSettings: [.linkedFramework("Foundation")]
         )
-    ]
+    ],
+    cxxLanguageStandard: .cxx17
 )

@@ -303,5 +303,46 @@
         ]
       }
     ]
+  },
+  {
+    "version": "270353",
+    "targets": [
+      {
+        "identifier": "revoke-marker",
+        "binary": "Contents/Resources/wechat.dylib",
+        "entries": [
+          {
+            "arch": "arm64",
+            "addr": "364ce68",
+            "expected": "FC6FBBA9F85F01A9F65702A9",
+            "asm": "F08103F010E247F900021FD6"
+          },
+          {
+            "arch": "arm64",
+            "addr": "5cf83c",
+            "expected": "FF4305D1FC6F11A9F65712A9",
+            "asm": "F005059010E647F900021FD6"
+          },
+          {
+            "arch": "arm64",
+            "addr": "5cf53c",
+            "expected": "F44FBEA9FD7B01A9FD430091",
+            "asm": "F005059010EA47F900021FD6"
+          }
+        ]
+      },
+      {
+        "identifier": "screenshot-capture",
+        "binary": "Contents/Resources/wechat.dylib",
+        "entries": [
+          {
+            "arch": "arm64",
+            "addr": "3a50138",
+            "expected": "FF0302D1F85F04A9",
+            "asm": "20008052C0035FD6"
+          }
+        ]
+      }
+    ]
   }
 ]
